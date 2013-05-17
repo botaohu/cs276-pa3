@@ -15,10 +15,11 @@ def tune(w1,w2,w3,w4,w5):
 #	np.linspace(0.0, 3.0, num=1),
 #	np.linspace(0.0, 3.0, num=1))
 
-def tune2(w):
+def tune3(w):
 	rank.weights = w
 	rank.main(1,"queryDocTrainData")
 	print w
 	return -ndcg.main("ranked.txt", "queryDocTrainRel")
 
-print scipy.optimize.anneal(tune2, [1.0, 0.5, 0.1, 0.3, 2.0])
+print scipy.optimize.anneal(tune3, [1.0, 0.5, 0.1, 0.3, 2.0], lower=-1,upper=0,feps=0.0001,T0=3)
+
