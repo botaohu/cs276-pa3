@@ -1,3 +1,3 @@
 #!/bin/bash
-code_file='rank'$1'.py'
-python $code_file $2
+code_file='rank.py'
+python $code_file $1 $2
