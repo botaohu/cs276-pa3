@@ -35,51 +35,74 @@
 
 \pagestyle{myheadings}  % Leave this command alone
 
+\section{Design Choice}
+
+\subsection{Sublinear Scaling}
+Sometimes it seems unlikely that $N$ occurrences of a term in a document truly carry $N$ times the significance of a single occurrence. Therefore, we use the logarithm of the term frequency to achieve a sublinear scaling effect.
+In our experiments, we use sublinear scaling in term frequency vector of the query instead of document vector, which gives good results.
+
+\subsection{Score Functions}
+The score function of cosine similarity with length normalization on the document vector is
+\begin{equation}\label{eq:1}
+net(q, d) = qv_q \cdot \frac{(c_u \cdot tf_{d, u} + c_t \cdot tf_{d, t} + c_b \cdot tf_{d, b} + c_h \cdot tf_{d, h}
++ c_a \cdot tf_{d, a})}{length(body)}
+\end{equation}
+The score function of BM25F is
+\begin{equation}\label{eq:2}
+net(q, d) = \sum_{t \in q} \frac{w_{d,t}}{K_1 + w_{d,t}} idf_t + \lambda V_j (f)
+\end{equation}
+where
+\begin{equation}\label{eq:3}
+w_{d,t} = \sum_{f} W_f \cdot ftf_{d, f, t} \qquad
+ftf_{d, f, t} = \frac{tf_{d, f, t}}{1 + B_f((len_{d,f}/avlen_f)-1)}
+\end{equation}
+and $f \in \{url, header, body, title, anchor \}$.
+The score function we used in task $3$ is
+\begin{equation}\label{eq:4}
+net(q, d) = \frac{Boost}{\textrm{smallest window size}}
+qv_q \cdot \frac{(c_u \cdot tf_{d, u} + c_t \cdot tf_{d, t} + c_b \cdot tf_{d, b} + c_h \cdot tf_{d, h}
++ c_a \cdot tf_{d, a})}{length(body)}
+\end{equation}
+
+
+
 \section{Questions}
 \begin{itemize}
   \item[] 1. What was the reasoning behind giving the weights to the url, title, body, header and anchor fields for the three tasks? Were there any particular properties about the documents that allowed a higher weight to be given to one field as opposed to another?
-  
-  \textbf{Answer}: 
+
 
   \item[] 2. What other metrics, not used in this assignment, could be used to get a better scoring function from the document?
-  
-  \textbf{Answer}: 
-      We could use max-tf normalization, which can be used to scale the body field by the maximum term frequency. 
 
-      Raw term frequencies in BM-25 can be further log normalized in addition to normalizing them by average
-document lengths
+      Other metrics, like user behaviors (query independent) and other metadata of the webpage
 
   \item[] 3. In BM25F, how do $B_{url}$, $B_{title}$, $B_{header}$, $B_{body}$, $B_{anchor}$, $\lambda$, $\lambda^\prime$ and $K_1$ affect the ranking function?
-  \textbf{Answer}: 
 
   \item[] 4. In BM25F, why did you select a particular $V_j$ function?
-  \textbf{Answer}: 
+
   We select $V_\textrm{page rank} = \log(\lambda^\prime + \textrm{page rank})$, whose plot is in Figure \ref{img:logfunction}. Since this function is a monotonically increasing function and it has the property of saturation, this function can be easily and reasonably applied to the original score function.
-\begin{figure}[h!]
+\begin{figure}
 \begin{center}
-  \includegraphics[width=0.5\textwidth]{V_function.eps} \\
+  \includegraphics[width=\textwidth]{V_function.eps} \\
   \caption{$V_\textrm{page rank} = \log(\lambda^\prime + \textrm{page rank})$ with different $\lambda^\prime$s}\label{img:logfunction}
 \end{center}
 \end{figure}
-  
-  
+
+
   \item[] 5. For a function that includes the smallest window as one component, how does varying $B$ and the boost function change the performance of the ranking algorithm?
-  
-  \textbf{Answer}: 
+
       $B$ has multiplicative effects on the ranking function, where the larger $B$ is, the more impact the smallest window component has on the ranking algorithm.
 \end{itemize}
 
 \section{Parameters}
-
-The reported NDCG scores on these three tasks are in Table \ref{tab:ndcg}.
-\begin{table}[h!]
+The reported ndcg scores on these three tasks are in Table \ref{tab:ndcg}.
+\begin{table}
 \begin{center}
 \begin{tabular}{|l|l|}
   \hline
    & NDCG \\
   \hline
   Task 1 & 0.8662 \\
-  Task 2 & 0.8758 \\
+  Task 2 & 0.8768 \\
   Task 3 & 0.8682 \\
   \hline
 \end{tabular}
@@ -88,6 +111,10 @@ The reported NDCG scores on these three tasks are in Table \ref{tab:ndcg}.
 \end{table}
 
 \subsection{Task 1}
+In general, the weights of different fields used in ranking functions reflects the relative importance of different fields.
+For example, the anchor texts have larger weights since they often contains precise and concise information of webpages.
+On the contrary, the urls are less informative so that their corresponding weights are usually smaller.
+The body weights are also less significant, because bodies contain information as well as lots of redundant noises.
 \begin{verbatim}
 task1_W_title = 1.0
 task1_W_header = 0.5
@@ -110,7 +137,7 @@ task2_B_body = 1.0
 task2_B_anchor = 0.1
 task2_K_1 = 0.8
 task2_lambda = 0.5
-task2_lambda_prime = 0.5 
+task2_lambda_prime = 1.0
 \end{verbatim}
 
 
