@@ -19,8 +19,8 @@ def tune1(w):
 	return -ndcg.main("ranked.txt", "queryDocTrainRel")
 
 
-[x0,fval,grid,jout] = scipy.optimize.brute(tune1, 
-	np.s_[0:3:0.1, 0:3:0.1, 0:3:0.1,0:3:0.1,0:3:0.1])
+[x1,fval,grid,jout] = scipy.optimize.brute(tune1, 
+	np.s_[0:1:0.3, 0:1:0.3,0.1:0.2:1,0.3:0.5:1,2:3:1])
 
 
 def tune3(w):
@@ -40,5 +40,5 @@ def tune3_(w):
 
 #print scipy.optimize.anneal(tune1, [1.0, 0.5, 0.1, 0.3, 2.0], lower=-1,upper=0,feps=0.0001,T0=3)
 
-print scipy.optimize.anneal(tune3_, [100], lower=-1,upper=0,learn_rate=0.9,feps=0.0001,T0=0.2,maxiter=100)
+#print scipy.optimize.anneal(tune3_, [600], lower=-1,upper=0,learn_rate=0.9,feps=0.0001,T0=0.2,maxiter=100)
 

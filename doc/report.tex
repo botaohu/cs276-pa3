@@ -38,32 +38,40 @@
 \section{Questions}
 \begin{itemize}
   \item[] 1. What was the reasoning behind giving the weights to the url, title, body, header and anchor fields for the three tasks? Were there any particular properties about the documents that allowed a higher weight to be given to one field as opposed to another?
-      
-      
-  \item[] 2. What other metrics, not used in this assignment, could be used to get a better scoring function from the document?
-      
-      Other metrics, like user behaviors (query independent) and other metadata of the webpage 
-      
-  \item[] 3. In BM25F, how do $B_{url}$, $B_{title}$, $B_{header}$, $B_{body}$, $B_{anchor}$, $\lambda$, $\lambda^\prime$ and $K_1$ affect the ranking function?
-      
-  \item[] 4. In BM25F, why did you select a particular $V_j$ function?
   
+  \textbf{Answer}: 
+
+  \item[] 2. What other metrics, not used in this assignment, could be used to get a better scoring function from the document?
+  
+  \textbf{Answer}: 
+      We could use max-tf normalization, which can be used to scale the body field by the maximum term frequency. 
+
+      Raw term frequencies in BM-25 can be further log normalized in addition to normalizing them by average
+document lengths
+
+  \item[] 3. In BM25F, how do $B_{url}$, $B_{title}$, $B_{header}$, $B_{body}$, $B_{anchor}$, $\lambda$, $\lambda^\prime$ and $K_1$ affect the ranking function?
+  \textbf{Answer}: 
+
+  \item[] 4. In BM25F, why did you select a particular $V_j$ function?
+  \textbf{Answer}: 
   We select $V_\textrm{page rank} = \log(\lambda^\prime + \textrm{page rank})$, whose plot is in Figure \ref{img:logfunction}. Since this function is a monotonically increasing function and it has the property of saturation, this function can be easily and reasonably applied to the original score function.
-\begin{figure}
+\begin{figure}[h!]
 \begin{center}
-  \includegraphics[width=\textwidth]{V_function.eps} \\
+  \includegraphics[width=0.5\textwidth]{V_function.eps} \\
   \caption{$V_\textrm{page rank} = \log(\lambda^\prime + \textrm{page rank})$ with different $\lambda^\prime$s}\label{img:logfunction}
 \end{center}
 \end{figure}
   
   
   \item[] 5. For a function that includes the smallest window as one component, how does varying $B$ and the boost function change the performance of the ranking algorithm?
-      
+  
+  \textbf{Answer}: 
       $B$ has multiplicative effects on the ranking function, where the larger $B$ is, the more impact the smallest window component has on the ranking algorithm.
 \end{itemize}
 
 \section{Parameters}
-The reported ndcg scores on these three tasks are in Table \ref{tab:ndcg}.
+
+The reported NDCG scores on these three tasks are in Table \ref{tab:ndcg}.
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{|l|l|}
