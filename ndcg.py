@@ -62,6 +62,7 @@ def main(myRankFile, groundTruthFile):
       numQueries += 1
 
     print ndcgScore/numQueries
+    return ndcgScore/numQueries
        
 if __name__=='__main__':
     if (len(sys.argv) < 3):
